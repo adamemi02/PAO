@@ -7,8 +7,12 @@ public class Book extends Product {
         super(name, price,ProductCategory.BOOKS);
     }
 
+    public Book(int id,String name, double price) {
+        super(id,name, price,ProductCategory.BOOKS);
+    }
+
     @Override
     public String Descriere() {
-        return "Book:"+name+ "__Price:"+price;
+        return "Book:"+getName()+ "__Price:"+getPrice();
     }
 }

@@ -2,130 +2,167 @@
 
 package Service;
 
-import Others.Order;
-import Others.Review;
-import Others.User;
+import Order_Product.Order_ProductRepository;
+import Others.Address.Address;
+import Others.Address.AddressRepository;
+import Others.Order.Order;
+import Others.Order.OrderRepository;
+import Others.Review.Review;
+import Others.Review.ReviewRepository;
+import Others.User.User;
+import Others.User.UserRepository;
 import Products.Product;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
+import Products.ProductRepository;
+import config.DataBaseConfiguration;
+
 import java.util.List;
-import java.util.Map;
 
 public class Service {
-    private List<Product> listaProduse = new ArrayList();
-    private List<User> listaUtilizatori = new ArrayList();
-    private List<Order> listaComenzi = new ArrayList();
-    private Map<String, List<Review>> recenziiProduse = new HashMap();
+    private ProductRepository productRepository;
+    private UserRepository userRepository;
+    private ReviewRepository reviewRepository;
+    private OrderRepository orderRepository;
+    private AddressRepository addressRepository;
+    private Order_ProductRepository order_productRepository;
+
+
+    public  Service() {
+        DataBaseConfiguration dataBaseConfiguration = new DataBaseConfiguration();
+        this.productRepository = new ProductRepository(dataBaseConfiguration);
+        this.userRepository = new UserRepository(dataBaseConfiguration);
+        this.reviewRepository = new ReviewRepository(dataBaseConfiguration);
+        this.orderRepository = new OrderRepository(dataBaseConfiguration);
+        this.addressRepository = new AddressRepository(dataBaseConfiguration);
+        this.order_productRepository = new Order_ProductRepository(dataBaseConfiguration);
+    }
+
+
+
+
+
+
+
+
 
     public List<Product> getListaProduse() {
-        return this.listaProduse;
+        return productRepository.getAllproducts();
     }
 
-    public void setListaProduse(List<Product> listaProduse) {
-        this.listaProduse = listaProduse;
-    }
-
-    public List<User> getListaUtilizatori() {
-        return this.listaUtilizatori;
-    }
-
-    public void setListaUtilizatori(List<User> listaUtilizatori) {
-        this.listaUtilizatori = listaUtilizatori;
-    }
-
-    public List<Order> getListaComenzi() {
-        return this.listaComenzi;
-    }
-
-    public void setListaComenzi(List<Order> listaComenzi) {
-        this.listaComenzi = listaComenzi;
-    }
-
-    public Map<String, List<Review>> getRecenziiProduse() {
-        return this.recenziiProduse;
-    }
-
-    public void setRecenziiProduse(Map<String, List<Review>> recenziiProduse) {
-        this.recenziiProduse = recenziiProduse;
-    }
-
-    public Service() {
-    }
 
     public void adaugaProdus(Product produs) {
-        this.listaProduse.add(produs);
+        productRepository.insert(produs);
+    }
+
+    public List<Product> getProducts()
+    {
+        return productRepository.getAllproducts();
     }
 
     public void adaugaRecenzielaProdus(Product produs, Review review) {
-        ((List)this.recenziiProduse.get(produs.getName())).add(review);
+        reviewRepository.insert(review,produs);
     }
 
     public void stergeRecenzielaProdus(Product produs, Review review) {
-        ((List)this.recenziiProduse.get(produs.getName())).remove(review);
+        reviewRepository.delete(review,produs);
+
     }
 
-    public List<Review> cautaRecenziidupaProdus(Product produs) {
-        return (List)this.recenziiProduse.get(produs.getName());
+    public List<Review> cautaRecenziidupaNumeleProdusului(String nume) {
+        return reviewRepository.getreviews_by_product(productRepository.getProduct_by_name(nume));
     }
 
     public void stergeProdus(Product produs) {
-        this.listaProduse.remove(produs);
+        productRepository.delete(produs);
+
     }
 
     public Product cautaProdusDupaDenumire(String denumire) {
-        for (int i = 0; i < this.listaProduse.size(); i++) {
-            Product produs = this.listaProduse.get(i);
-            if (produs.getName().equals(denumire)) {
-                return produs;
-            }
-        }
-        return null;
+        return productRepository.getProduct_by_name(denumire);
+    }
+
+    public void stergeAdresa(Address address)
+    {
+        addressRepository.delete(address);
     }
 
     public void adaugaUtilizator(User utilizator) {
-        this.listaUtilizatori.add(utilizator);
+        userRepository.insert(utilizator);
+
     }
 
-    public void sortareComenzidupaId() {
-        Collections.sort(this.listaComenzi, new Comparator<Order>() {
-            public int compare(Order c1, Order c2) {
-                return Integer.compare(c1.getId(), c2.getId());
-            }
-        });
+    public void adaugaAdresa(Address address)
+    {
+
+        addressRepository.insert(address);
+
     }
 
-    public void stergeUtilizator(User utilizator) {
-        this.listaUtilizatori.remove(utilizator);
+    public List<Order> sortareComenzidupaId() {
+        return orderRepository.getAllOrders_sorted();
     }
+
+    public void stergeUtilizator(User utilizator)
+    {userRepository.delete(utilizator);}
+
+
+    public void modifica_adresa_utilizator(User utilizator,Address address)
+    {
+        utilizator.setPreferredAddress(address);
+        userRepository.update(utilizator);
+    }
+
+    public void modifica_adresa_comanda(Order comanda,Address address)
+    {
+        comanda.setDeliveryAddress(address);
+        orderRepository.update_Order(comanda);
+    }
+
+    public void modifica_pretul_unui_produs(Product produs,double pret)
+    {
+        produs.setPrice(pret);
+        productRepository.update(produs);
+    }
+
+    public void modifica_textul_ratingul_unui_produs(Product produs,String text,Double price,Review review)
+    {
+        review.setText(text);
+        review.setRating(price);
+        reviewRepository.update(review,produs);
+    }
+
+
 
     public User cautaUtilizatorDupaEmail(String email) {
-        for (int i = 0; i < this.listaUtilizatori.size(); i++) {
-            User utilizator = this.listaUtilizatori.get(i);
-            if (utilizator.getEmail().equals(email)) {
-                return utilizator;
-            }
-        }
-        return null;
+        return  userRepository.get_user_by_email(email);
     }
 
-    public void adaugaComanda(Order comanda) {
-        this.listaComenzi.add(comanda);
+    public void adaugaComanda(Order comanda)
+    {orderRepository.add_Order(comanda);
+    }
+
+    public void adaugaprodus_in_comanda(Order order,Product product)
+    {
+        order.addProduct(product);
+        orderRepository.update_Order(order);
+    }
+
+    public void stergeprodus_din_comanda(Order order,Product product)
+    {
+        order.deleteProduct(product);
+        orderRepository.update_Order(order);
     }
 
     public void stergeComanda(Order comanda) {
-        this.listaComenzi.remove(comanda);
+
+        orderRepository.delete_Order(comanda);
     }
 
-    public Order cautaComandaDupaID(int id) {
-        for (int i = 0; i < this.listaComenzi.size(); i++) {
-            Order comanda = this.listaComenzi.get(i);
-            if (comanda.getId() == id) {
-                return comanda;
-            }
-        }
-        return null;
+
+
+
+
+
     }
-}
+
+
+

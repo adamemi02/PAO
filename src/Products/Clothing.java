@@ -7,8 +7,12 @@ public class Clothing extends Product {
         super(name, price,ProductCategory.CLOTHING);
     }
 
+    public Clothing(int id,String name, double price) {
+        super(id,name, price,ProductCategory.CLOTHING);
+    }
+
     @Override
     public String Descriere() {
-        return "Clothing:"+name+ "__Price:"+price;
+        return "Clothing:"+getName()+ "__Price:"+getPrice();
     }
 }
