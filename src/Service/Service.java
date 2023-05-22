@@ -2,6 +2,7 @@
 
 package Service;
 
+import Exceptions.InvalidRatingException;
 import Order_Product.Order_ProductRepository;
 import Others.Address.Address;
 import Others.Address.AddressRepository;
@@ -59,6 +60,17 @@ public class Service {
     }
 
     public void adaugaRecenzielaProdus(Product produs, Review review) {
+        boolean valid=true;
+        try{
+            if(review.getRating()>10 || review.getRating()<0)
+                throw new InvalidRatingException("Ratingul review-ului cu id-ul "+review.getId()+" este invalid deci nu este luat in considerare");
+        }
+        catch (InvalidRatingException e)
+        {
+            valid=false;
+            System.out.println(e.getMessage());
+        }
+        if(valid==true)
         reviewRepository.insert(review,produs);
     }
 
@@ -86,6 +98,20 @@ public class Service {
     }
 
     public void adaugaUtilizator(User utilizator) {
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        boolean valid=true;
+        try{
+            if(!utilizator.getEmail().matches(regexPattern))
+                throw new InvalidRatingException("Emailul utilizatorului cu id-ul "+utilizator.getId()+" este invalid deci nu este luat in considerare");
+
+        }
+        catch (InvalidRatingException e)
+        {
+            valid=false;
+            System.out.println(e.getMessage());
+        }
+        if(valid==true)
         userRepository.insert(utilizator);
 
     }
