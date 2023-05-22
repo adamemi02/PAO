@@ -1,38 +1,14 @@
 
 
-package Others.Address;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
+package Others;
+
 public class Address {
-
-    private static int nr_adrese=0;
-
-    private int id;
     private String street;
-
-    public int getId() {
-        return id;
-    }
-
     private String city;
     private String state;
     private String zipCode;
 
-    public Address(int id,String street, String city, String state, String zipCode) {
-        ++nr_adrese;
-        this.id=id;
-        this.street = street;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-    }
-
     public Address(String street, String city, String state, String zipCode) {
-        ++nr_adrese;
-        this.id=nr_adrese;
         this.street = street;
         this.city = city;
         this.state = state;
@@ -70,13 +46,4 @@ public class Address {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
-
-
-
-
-
-
-
-
-
 }
