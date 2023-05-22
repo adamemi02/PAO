@@ -3,12 +3,8 @@ package Products;
 import Utile.ProductCategory;
 
 public class Book extends Product {
-    public Book(String name, double price) {
-        super(name, price,ProductCategory.BOOKS);
-    }
-
     public Book(int id,String name, double price) {
-        super(id,name, price,ProductCategory.BOOKS);
+        super( id ,name, price,ProductCategory.BOOKS);
     }
 
     @Override

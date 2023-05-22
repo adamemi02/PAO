@@ -9,26 +9,14 @@ import java.io.IOException;
 
 public abstract class Product {
 
-    private static int nr_produse=0;
-
     private int id;
     private String name;
     private double price;
     private ProductCategory category;
 
+
     public Product(int id,String name, double price, ProductCategory category) {
-
-        ++nr_produse;
         this.id=id;
-        this.name = name;
-        this.price = price;
-        this.category = category;
-    }
-
-
-    public Product(String name, double price, ProductCategory category) {
-        ++nr_produse;
-        this.id=nr_produse;
         this.name = name;
         this.price = price;
         this.category = category;
@@ -63,8 +51,29 @@ public abstract class Product {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public static void CSVWriter()
+    {
+        File file=new File("src\\CSV_Files\\Product.csv");
+        if(!file.exists())
+        {
+            try{
+                FileWriter csvWriter=new FileWriter("src\\CSV_Files\\Product.csv");
+                CSVWriter writer=new CSVWriter(csvWriter);
+                String[] data = {"Id", "Nume", "Pret", "Categorie"};
+                writer.writeNext(data);
+                csvWriter.close();
 
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
 
 

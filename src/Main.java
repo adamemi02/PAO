@@ -1,90 +1,79 @@
 
 
-import Order_Product.Order_ProductRepository;
-import Others.Address.Address;
-import Others.Address.AddressRepository;
-import Others.Order.Order;
-import Others.Order.OrderRepository;
-import Others.Review.Review;
-import Others.Review.ReviewRepository;
-import Others.User.User;
-import Products.*;
+import Others.Address;
+import Others.Order;
+import Others.Review;
+import Others.User;
+import Products.Book;
+import Products.Clothing;
+import Products.Electronics;
+import Products.Product;
+import Read_Write.Read_Write;
 import Service.Service;
 import Utile.OrderStatus;
-import config.DataBaseConfiguration;
+import com.opencsv.CSVWriter;
 
-import java.time.LocalDateTime;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
-
+    private static  Service service = new Service();
 
     public static void main(String[] args) {
+        Address.CSVWriter();
+        Product.CSVWriter();
+        User.CSVWriter();
+        Order.CSVWriter();
+        Review.CSVWriter();
 
-        Service service=new Service();
-
-        DataBaseConfiguration dataBaseConfiguration = new DataBaseConfiguration();
-
-
-        Product product1 = new Book( "Narnia", 30);
-        Product product2=new Clothing("tricou", 50);
-        Product product3=new Electronics("casti", 1000);
-
-        service.adaugaProdus(product1);
-        service.adaugaProdus(product2);
-        service.adaugaProdus(product3);
-        Address adresa2=new Address("Strada 2", "Bucuresti", "Romania", "123456");
-        Address adresa1=new Address("Strada 3", "Berlin", "Germania", "324DE");
-        Review review1=new Review("bun",10);
-        Review review2=new Review("foarte bun",10);
-        service.adaugaRecenzielaProdus(product1,review1);
-        service.adaugaRecenzielaProdus(product1,review2);
-        service.adaugaRecenzielaProdus(product2,review1);
-        service.adaugaRecenzielaProdus(product3,review2);
-        service.stergeRecenzielaProdus(product1,review1);
-        service.stergeProdus(product3);
-        System.out.println(service.cautaRecenziidupaNumeleProdusului("tricou").size());
+        Product carte = new Book(1, "Narnia", 50);
+        Product pantaloni = new Clothing(2, "Jeans", 100);
+        Product laptop = new Electronics(3, "Laptop", 2000);
+        service.adaugaProdus(carte);
+        service.adaugaProdus(pantaloni);
+        service.adaugaProdus(laptop);
+        Address adresa1=new Address("Venus","Bucuresti","Romania","1456RO");
+        Address adresa2=new Address("Fahrzig","Berlin","Germania","143DE");
+        Address adresa3=new Address("Greenland","London","England","1456ENG");
         service.adaugaAdresa(adresa1);
         service.adaugaAdresa(adresa2);
-        service.stergeAdresa(adresa1);
-        service.adaugaAdresa(adresa1);
-
-        User user1=new User("Andrei", "andrei02", "parola",adresa1);
-        User user2=new User("Andrei", "andrei02", "parola",adresa2);
+        service.adaugaAdresa(adresa3);
+        User user1=new User("Daniel","daniel02@gmail.com","12345678",adresa1);
+        User user2=new User("Andrei","andrei49@gmail.com","abcde",adresa2);
+        User user3=new User("Alex","alex40@gmail.com","qwerty",adresa3);
         service.adaugaUtilizator(user1);
         service.adaugaUtilizator(user2);
-        service.stergeUtilizator(user1);
-        Order order1=new Order(adresa2,OrderStatus.PLACED);
-        order1.addProduct(product1);
-        order1.addProduct(product2);
-        service.adaugaComanda(order1);
-        service.stergeprodus_din_comanda(order1,product1);
-        service.adaugaprodus_in_comanda(order1,product3);
-
-        service.stergeComanda(order1);
-        service.adaugaAdresa(adresa2);
-        service.adaugaUtilizator(user1);
-        service.modifica_adresa_utilizator(user1,adresa2);
-        service.adaugaComanda(order1);
-        service.modifica_adresa_comanda(order1,adresa1);
-        service.modifica_pretul_unui_produs(product1,100);
-        service.modifica_textul_ratingul_unui_produs(product1,"foarte bun",7.0,review2);
-
-
-
-
-
-
-
-
-
-
-
+        service.adaugaUtilizator(user3);
+        Order comanda1=new Order(1,adresa1, OrderStatus.PLACED);
+        comanda1.addProduct(carte);
+        comanda1.addProduct(pantaloni);
+        Order comanda2=new Order(2,adresa2,OrderStatus.PLACED);
+        comanda2.addProduct(laptop);
+        comanda2.addProduct(pantaloni);
+        service.adaugaComanda(comanda1);
+        service.adaugaComanda(comanda2);
+        Review review1=new Review("Foarte buna",5);
+        Review review2=new Review("Buna",4);
+        service.adaugaRecenzielaProdus(carte,review1);
+        service.adaugaRecenzielaProdus(carte,review2);
+        service.adaugaRecenzielaProdus(pantaloni,review1);
+        service.stergeRecenzielaProdus(carte,review1);
+        service.stergeUtilizator(user2);
+        service.stergeProdus(carte);
+        System.out.println(service.cautaProdusDupaDenumire("Laptop").getPrice());
+        for (Product produs:service.getListaProduse()) {
+            System.out.println(produs.getName());
         }
 
 
 
     }
 
+}
