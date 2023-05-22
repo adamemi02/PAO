@@ -51,8 +51,8 @@ public class Main {
         service.stergeAdresa(adresa1);
         service.adaugaAdresa(adresa1);
 
-        User user1=new User("Andrei", "andrei02", "parola",adresa1);
-        User user2=new User("Andrei", "andrei02", "parola",adresa2);
+        User user1=new User("Andrei", "andrei02@gmail.com", "parola",adresa1);
+        User user2=new User("Daniel", "dani@yahoo.com", "parola",adresa2);
         service.adaugaUtilizator(user1);
         service.adaugaUtilizator(user2);
         service.stergeUtilizator(user1);
@@ -71,6 +71,15 @@ public class Main {
         service.modifica_adresa_comanda(order1,adresa1);
         service.modifica_pretul_unui_produs(product1,100);
         service.modifica_textul_ratingul_unui_produs(product1,"foarte bun",7.0,review2);
+        Review rating4=new Review("blana",13);
+        service.adaugaRecenzielaProdus(product1,rating4);
+        service.stergeAdresa(adresa1);
+        service.stergeAdresa(adresa2);
+        service.adaugaAdresa(adresa1);
+        service.adaugaAdresa(adresa2);
+        User user4=new User("Andrei", "dani02", "parola",adresa1);
+        service.adaugaUtilizator(user4);
+
 
 
 
