@@ -31,7 +31,6 @@ public class Main {
         Product product1 = new Book( "Narnia", 30);
         Product product2=new Clothing("tricou", 50);
         Product product3=new Electronics("casti", 1000);
-        Product product4=new Electronics("mouse", 2000);
 
         service.adaugaProdus(product1);
         service.adaugaProdus(product2);
